@@ -1,6 +1,8 @@
 const { sequelize } = require('./db');
 const { Band, Musician, Song } = require('./index')
 
+
+
 describe('Band, Musician, and Song Models', () => {
     /**
      * Runs the code prior to all tests
@@ -10,6 +12,13 @@ describe('Band, Musician, and Song Models', () => {
         // by setting 'force:true' the tables are recreated each time the 
         // test suite is run
         await sequelize.sync({ force: true });
+        const seedSongs = async () => { 
+            await Song.bulkCreate([
+            {title: "Claire de lune", year: 1960, length: 600},
+            {title: "Oklahoma Home", year: 1960, length: 300},
+            {title: "Hesitation Blues", year: 1930, length: 200}
+            ])}
+        seedSongs()
     })
 
     test('can create a Band', async () => {
@@ -20,6 +29,11 @@ describe('Band, Musician, and Song Models', () => {
     test('can create a Musician', async () => {
         const testMusician = await Musician.create({name: "Lucio Battisti", instrument: "Guitar"})
         expect(testMusician.instrument).toBe("Guitar");
+    })
+ 
+    test('can create a Song', async () => {
+        const testSong = await Song.create({title: "Love Song of the Waterfall", year: 1960, length: 300})
+        expect(testSong.title).toBe("Love Song of the Waterfall");
     })
 
     test('can update a Band', async () => {
@@ -35,6 +49,12 @@ describe('Band, Musician, and Song Models', () => {
         expect(testMusician.instrument).toBe("triangle");
     })
 
+    test('can update a Song', async () => {
+        const testSong = await Song.create({title: "Battle of Queenstown", year: 1950, length: 200})
+        testSong.update({length: 175})
+        expect(testSong.length).toBe(175);
+    })
+
     test('can delete a Band', async () => {
         const del = await Band.destroy({where: {id: 1}});
         expect(del).toBe(1);
@@ -48,5 +68,13 @@ describe('Band, Musician, and Song Models', () => {
         // console.log(invalid)
         // expect(invalid).toBeFalsy();
         expect(del).toBe(1);
+    })
+
+    test('can delete a Song', async () => {
+        const del = await Song.destroy({where: {title: "Love Song of the Waterfall"}})
+        expect(del).toBe(1);
+    })
+    test('returning string', async () => {
+        await Song.prototype.getLongestSong()
     })
 })
