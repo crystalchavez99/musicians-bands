@@ -30,17 +30,23 @@ describe('Band, Musician, and Song Models', () => {
 // ----------------- up till
 
     test('can update a Musician', async () => {
-        // TODO - test updating a musician
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const testMusician = await Musician.create({name: "Thundercat", instrument: "Bass"})
+        testMusician.update({instrument: "triangle"});
+        expect(testMusician.instrument).toBe("triangle");
     })
 
     test('can delete a Band', async () => {
-        // TODO - test deleting a band
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const del = await Band.destroy({where: {id: 1}});
+        expect(del).toBe(1);
     })
 
     test('can delete a Musician', async () => {
-        // TODO - test deleting a musician
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        // const testMusician = await Musician.create({name: "test", instrument: "idk"})
+        // const del = await Musician.destroy({where: {name: 'test'}});
+        const del = await Musician.destroy({where: {id: 1}});
+        // const invalid = await Musician.findOne({where: {name: 'test'}});
+        // console.log(invalid)
+        // expect(invalid).toBeFalsy();
+        expect(del).toBe(1);
     })
 })
