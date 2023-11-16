@@ -74,7 +74,19 @@ describe('Band, Musician, and Song Models', () => {
         const del = await Song.destroy({where: {title: "Love Song of the Waterfall"}})
         expect(del).toBe(1);
     })
+
     test('returning string', async () => {
         await Song.prototype.getLongestSong()
+    })
+
+    test('Band and Musician tables have correct association', async () => {
+        const bands = await Band.findAll();
+        const band = bands[0];
+
+        const musician = await Musician.findOne({where : {name : 'Thundercat'}, include: Band});
+        await band.addMusicians(musician);
+        // console.log(JSON.stringify(musician, null, 2));
+        const musicians = await band.getMusicians();
+        expect(musicians[0].dataValues).toHaveProperty('BandId');
     })
 })
