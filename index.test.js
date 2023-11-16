@@ -19,6 +19,7 @@ describe('Band, Musician, and Song Models', () => {
             {title: "Hesitation Blues", year: 1930, length: 200}
             ])}
         seedSongs()
+        Musician.create({name: "Hank Williams", instrument: "Guitar"})
     })
 
     test('can create a Band', async () => {
@@ -89,4 +90,16 @@ describe('Band, Musician, and Song Models', () => {
         const musicians = await band.getMusicians();
         expect(musicians[0].dataValues).toHaveProperty('BandId');
     })
+
+    test("testing song and musician association", async () => {
+        Musician.create({name: "Hank Williams", instrument: "Guitar"})
+        const bands = await Band.findAll()
+        const band = bands[0]
+        // const musicians = await bands[0].getMusicians()
+        const songs = await Song.findAll()
+        await band.addSongs([songs[0], songs[1], songs[2]])
+        const addedSongs = await band.getSongs()
+        expect(addedSongs.length).toBe(3)        
+    })
 })
+
