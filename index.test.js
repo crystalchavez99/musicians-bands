@@ -101,5 +101,18 @@ describe('Band, Musician, and Song Models', () => {
         const addedSongs = await band.getSongs()
         expect(addedSongs.length).toBe(3)        
     })
+
+    test("association", async () =>{
+        Band.create({name:"System of a Down", genre: "Metal"})
+        Band.create({name: "The Cranberries", genre: "Rock"})
+        Song.create({title: "toxicity", year: 2001, length: 150})
+        Song.create({title: "zombie", year: 1995, length: 180})
+        let bands = await Band.findAll();
+        let songs = await Song.findAll();
+        let sod = bands[1];
+        await sod.addSongs([songs[4],songs[5]])
+        let sodSongs = await sod.getSongs();
+        expect(sodSongs.length).toBe(2)
+    })
 })
 
